@@ -105,7 +105,7 @@ def similarity_matrix(vectorized_dictionary):
 
     for row in range(num_tokens):
         for col in range(num_tokens):
-            sm[row][col] = np.dot(np.transpose(vectorized_dictionary[row][1]), vectorized_dictionary[col][1])
+            sm[row][col] = np.dot(np.transpose(vectorized_dictionary[row][0]), vectorized_dictionary[col][0])
     return sm
 
 def syntax_space(similarity_matrix, vectorized_dictionary):
@@ -121,7 +121,7 @@ def syntax_space(similarity_matrix, vectorized_dictionary):
             granularity = min(syntax_granularities[gran_i],num_tokens)
             most_similar_indices = np.argpartition(similarity_matrix[row],-granularity)[-granularity:]
             for key in most_similar_indices:
-                matrices[gran_i][row] += vectorized_dictionary[key]
+                matrices[gran_i][row] += vectorized_dictionary[key][0]
     return matrices
 
 def meaning_space(ldamodel, topn, dictionary, vectorized_dictionary, syntaxed_space):
@@ -135,12 +135,14 @@ def meaning_space(ldamodel, topn, dictionary, vectorized_dictionary, syntaxed_sp
         matrix = np.zeros((num_tokens, meaning_granularities[gran_i], N))
         for token_id in range(num_tokens):
             # rank topics by how much the specific token contributes to it. start stacking words
-            token_topics = ldamodel.get_term_topics(token_id, minimum_probability=None)
-            # either choose the max topic or a certain number from each topic
+            # either choose the max topic or a certain number from each topic.
+            # let's choose max or else lose the less popular tokens
+            token_topic = ldamodel.get_term_topics(token_id, minimum_probability=None)[0]
+            print token_topic
 
-            for topic_id in token_topics:
-                for tup in ldamodel.get_topic_terms(topicid, topn):
-            print token_topics
+            #for topic_id in token_topics:
+            #    for tup in ldamodel.get_topic_terms(topicid, topn):
+            #print token_topics
             
         matrices.append(matrix)
     
