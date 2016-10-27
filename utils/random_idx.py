@@ -11,6 +11,10 @@ import os
 import pickle
 
 alphabet = string.lowercase + " "
+phonemes = ["AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", "D", "DH", "EH", "ER", "EY", "F", "G", "HH", "IH", \
+            "IY", "JH", "K", "L", "M", "N", "NG", "OW", "OY", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "V", "W", \
+            "Y", "Z", "ZH"
+           ]
 lang_dir = 'preprocessed_texts/'
 
 cluster_cache = {}
@@ -80,11 +84,16 @@ def stack_list(lst):
         all_words.append(word_hypervec(word))
     return np.vstack(all_words)
 
-
-
-
-
-
+def generate_phoneme_id_vectors(N, k, ph=phonemes):
+    # build row-wise k-sparse random index matrix
+    # each row is random index vector for phoneme
+    num_phonemes = len(ph)
+    RI_phonemes = np.zeros((num_phonemes,N))
+    for i in xrange(num_phonemes):
+            rand_idx = np.random.permutation(N)
+            RI_phonemes[i,rand_idx[0:k]] = 1
+            RI_phonemes[i,rand_idx[k:2*k]] = -1
+    return RI_phonemes
 
 def generate_letter_id_vectors(N, k, alph=alphabet):
     # build row-wise k-sparse random index matrix
