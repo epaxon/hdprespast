@@ -1,1 +1,0 @@
-	Este vorba despre reducerea dependenţei statelor membre faţă de statele furnizoare.

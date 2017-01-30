@@ -1,1 +1,0 @@
-	Puede tan sólo declarar "adoptado" o "no adoptado".
