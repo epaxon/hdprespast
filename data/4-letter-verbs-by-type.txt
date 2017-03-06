@@ -1,0 +1,470 @@
+
+Thu Dec 15 17:21:26 PST 2016
+
+4-LETTER VERBS OF BROWN CORPUS GROUPED BY PAST-TENSE TYPE
+Sorted by last letter
+
+Of 447 4-letter verbs
+
+  253 are regular, append -ed
+   82 end in e, append -d
+   53 repeat last consonant and append -ed (+Xed)
+    9 change y to i and append -ed (=i-ed)
+   45 are irregular, 10% {!). 12 of them end in e, 10 in d
+    5 may not be verbs at all (???)
+
+
+bomb
+curb
+grab
+deed
+fold
+gild
+gird
+hand
+head
+heed
+herd
+land
+load
+meld
+mend
+mind
+mold
+need
+plod
+raid
+rend
+shed
+tend
+thud
+weed
+weld
+puff
+bang
+gang
+hang
+long
+ring
+wing
+arch
+cash
+dash
+itch
+lash
+mesh
+push
+rush
+sigh
+wash
+wish
+back
+bark
+cook
+deck
+dock
+duck
+dunk
+fork
+fuck
+grok
+hook
+jerk
+kick
+lack
+lick
+link
+lock
+look
+lurk
+mark
+mask
+mock
+neck
+pack
+park
+peck
+perk
+pick
+rack
+reek
+risk
+rock
+seek
+sink
+soak
+sock
+suck
+talk
+tick
+tuck
+walk
+wink
+work
+yank
+boil
+call
+cool
+curl
+fail
+fell
+fill
+foil
+fool
+foul
+hail
+haul
+heal
+hurl
+keel
+kill
+lull
+mail
+pall
+peel
+pool
+pull
+roll
+sail
+seal
+soil
+till
+toll
+wall
+well
+will
+yell
+calm
+deem
+farm
+film
+foam
+form
+harm
+loom
+roam
+room
+seem
+shim
+term
+warm
+burn
+coin
+damn
+darn
+dawn
+down
+earn
+even
+gain
+iron
+join
+lean
+moan
+moon
+open
+rain
+ruin
+sign
+turn
+warn
+yawn
+echo
+kayo
+solo
+veto
+bump
+camp
+dump
+gasp
+help
+jump
+pump
+reap
+seep
+tamp
+trip
+weep
+bear
+fear
+near
+peer
+pour
+rear
+roar
+sear
+sour
+tear
+tour
+veer
+fuss
+kiss
+mass
+mess
+miss
+pass
+piss
+toss
+best
+bolt
+boot
+bunt
+bust
+butt
+cart
+cast
+coat
+cost
+dust
+edit
+fort
+halt
+heat
+hint
+hoot
+hunt
+hurt
+jolt
+last
+lift
+list
+melt
+nest
+oust
+part
+post
+putt
+rent
+rest
+root
+rust
+seat
+sort
+suit
+test
+tilt
+vent
+vest
+wait
+want
+wilt
+chew
+draw
+flow
+glow
+gnaw
+show
+slow
+snow
+thaw
+view
+coax
+flex
+bury
+obey
+play
+pray
+stay
+sway
+buzz
+
+ache -d
+bake -d
+bare -d
+base -d
+bide -d
+bore -d
+care -d
+case -d
+cite -d
+code -d
+cope -d
+core -d
+cure -d
+dare -d
+date -d
+dice -d
+dine -d
+dole -d
+ease -d
+edge -d
+face -d
+fade -d
+fake -d
+faze -d
+fete -d
+file -d
+fine -d
+fire -d
+free -d
+fuse -d
+game -d
+gaze -d
+glue -d
+hate -d
+hike -d
+hire -d
+hole -d
+home -d
+hope -d
+idle -d
+joke -d
+laze -d
+like -d
+line -d
+live -d
+love -d
+lure -d
+mate -d
+move -e
+name -d
+nose -d
+note -d
+ooze -d
+pace -d
+page -d
+pare -d
+pave -d
+pile -d
+poke -d
+pose -d
+race -d
+rake -d
+rape -d
+rate -d
+rove -d
+rule -d
+save -d
+size -d
+tame -d
+tide -d
+time -d
+tire -d
+tone -d
+tote -d
+tune -d
+type -d
+urge -d
+vote -d
+wade -d
+wage -d
+wave -d
+wipe -d
+
+prod +ded
+brag +ged
+clog +ged
+drag +ged
+flag +ged
+flog +ged
+plug +ged
+slug +ged
+snag +ged
+stem +med
+trim +med
+chin +ned
+grin +ned
+plan +ned (vs. planed)
+scan +ned
+shun +ned
+span +ned
+spin +ned
+thin +ned
+chop +ped
+drop +ped
+flip +ped
+grip +ped (vs. griped)
+prop +ped
+ship +ped
+shop +ped
+skip +ped
+slap +ped
+slip +ped
+slop +ped (vs. sloped)
+snap +ped
+step +ped
+stop +ped
+swap +ped
+whip +ped
+wrap +ped
+blur +red
+char +red
+spur +red
+stir +red
+blot +ted
+chat +ted
+clot +ted
+emit +ted
+fret +ted
+knit +ted
+knot +ted
+omit +ted
+plot +ted
+quit +ted, ! QUIT
+slit +ted
+spot +ted
+trot +ted
+
+busy =i-ed
+copy =i-ed
+defy =i-ed
+deny =i-ed
+envy =i-ed
+levy =i-ed
+pity =i-ed
+rely =i-ed
+vary =i-ed
+
+bend ! BENT
+bind ! BOUND
+feed ! FED
+find ! FOUND
+hold ! HELD
+lead ! LED
+lend ! LENT
+read ! READ
+send ! SENT
+wind ! WOUND
+bite ! BIT
+come ! CAME
+dive ! DOVE
+flee ! FLED
+give ! GAVE
+hide ! HID
+lose ! LOST
+make ! MADE
+ride ! RODE
+rise ! ROSE
+take ! TOOK
+wake ! WOKE
+hang ! HUNG
+sing ! SANG
+deal ! DELTA
+fall ! FELL
+feel ! FELT
+sell ! SOLD
+tell ! TOLD
+swim ! SWAM
+mean ! MEANT
+redo ! REDID
+undo ! UNDID
+keep ! KEPT
+leap ! LEAPT, also leaped
+hear ! HEARD
+wear ! WORE
+beat ! BEAT
+meet ! MET
+shut ! SHUT
+spit ! SPAT
+blow ! BLEW
+grow ! GREW
+know ! KNEW
+plow ! BLEW
+
+flng ???
+knoe ???
+paie ???
+prai ???
+spat ???
+
+
