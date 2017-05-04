@@ -46,11 +46,11 @@ def Shuffle(present, past, freq=None):
     l = zip(present, past, freq)
     np.random.shuffle(l)
     present, past, freq = zip(*l)
-    return present, past, freq
+    return np.array(present), np.array(past), np.array(freq)
   l = zip(present, past)
   np.random.shuffle(l)
   present, past = zip(*l)
-  return present, past
+  return np.array(present), np.array(past)
 
 
 def LoadLatentSpace():
