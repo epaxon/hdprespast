@@ -1,0 +1,12 @@
+ 	-make the discussion last bc copy pasted from models. bc analysis is there rn
+
+
+
+-Discussion:
+-Model 1:
+ In Model 1, we see that a straight-forward dictionary created by hypercomputing binding results in over-emphasis of the common rule. Because we expect the representation of the dictionary elements to be generalizable, then there should be some common correlations that the features will emphasize. However, such a dictionary may drown-out other important aspects of the transformation to emphasize the common rule in the training data. The performance of the algorithm above can be explained by the system always emphasizing the most common transformation of adding "ed.". 
+
+-Model 1, 2, 3, 4:
+ \paragraph{}
+    One of the challenges with the mapping (binding) is that most present-past verb pairs have the same beginning letters. To get the correct output, we have to have the beginning of every present-tense word mapped to its same beginning for every past-tense word. This would require a lot more examples than are present in the training set. 
+
