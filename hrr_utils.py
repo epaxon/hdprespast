@@ -20,7 +20,7 @@ def GetRV(string, dic, ngram=3):
   for i in range(len(string)-ngram+1):
     s = string[i:i+ngram]
     l = np.ones(n)
-    for j in s:
+    for j in s[::-1]:
       l = np.roll(l, 1)
       l = np.multiply(l, dic[j])
         
