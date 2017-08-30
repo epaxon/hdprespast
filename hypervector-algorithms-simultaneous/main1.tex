@@ -1,0 +1,258 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+% \PassOptionsToPackage{numbers, compress}{natbib}
+% * <ahliu@berkeley.edu> 2017-04-12T21:03:11.875Z:
+%
+% ^.
+% before loading nips_2017
+%
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2017}
+
+\usepackage{nips_2017}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2017}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\title{Hypervector algorithms for simultaneous one-shot learning and generalization}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{
+  David S.~Hippocampus\thanks{Use footnote for providing further
+    information about author (webpage, alternative
+    address)---\emph{not} for acknowledging funding agencies.} \\
+  Department of Computer Science\\
+  Cranberry-Lemon University\\
+  Pittsburgh, PA 15213 \\
+  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  %% examples of more authors
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+\maketitle
+
+\begin{abstract}
+Our algorithms show that grammatical rules can be learned by associating word patterns. Artificial neural networks are a connectionist model despite allowing few insights into understanding hidden layers. Our new interpretation of neural network machinery exploits high-dimensional computing. Features can be enumerating without having to enumerate all features. Hidden layers are explained by explicit matrix/vector operations because almost all transformations in low dimensional data can be represented by binding, unbinding, and summation operations. It is computationally cheaper than training in low dimensions with traditional gradient methods or alternatives. %(simulated annealing).
+
+
+\end{abstract}
+
+\section{Introduction}
+
+The classical work \emph{Parallel Distributed Processing} (PDP; \citet{McClelland1986}) laid the foundations for modern neural networks and machine-learning algorithms. 
+\citet{Rumelhart1986a} described a biologically-inspired type of system that could learn complex transformation between present-tense and past-tense verbs, igniting an intense debate (\citet{Pinker1988}; \citet{Fodor1988}) regarding the nature of neural computation between symbolic (\citet{Pinker2002a}; \citet{Fodor1990}) and sub-symbolic information processing (\citet{MacWhinney1991}; \citet{Bullinaria1994}; \citet{McClelland2002}). Connectionist algorithms presented in PDP, such as the perceptron learning rule, have evolved into state-of-the-art machine-learning models. While sub-symbolic learning algorithms perform well, their inner workings are not well-understood, and great efforts are underway to uncover insights into their functionality.
+
+The ideas presented in PDP go beyond the role in inspiring deep neural networks. The original present-past learning problem was motivated by works on how children learn verb tense associations and the issue of learning generalizable rules paired with the challenge of memorizing exceptions to these rules. Furthermore, children are exposed to words one at a time, and learning must be performed in an online fashion, unlike typical neural network models that require many iterations over the training data.
+
+Hyperdimensional computing (\citet{Kanerva2009}) is a framework that can bridge the divide between symbolic and connectionist information processing. With advances in hyperdimensional computing theory, we revisit the classic present-past learning problem to develop new learning algorithms that can: 1. perform one-shot memorization for any given association in the training set; 2. learn generalizable rules or transformations that apply to data outside the training set. 3. learn in an online fashion; 4. infer one representation from another. We describe several neural networks that use the principles of hyperdimensional computing to achieve these goals and present new insights into the relationships between gradient-descent learning algorithms and the \emph{binding mechanism} present in hyperdimensional computing and other vector-symbolic architectures (\citet{Gayler2003}) .
+
+\section{Characterization of Learning Problem}
+
+Transforming a present tense verb to its past tense presents two fundamentally conflicting challenges: learning a generalizable rule applicable to most tense transformations while memorizing specific exceptions. While neural networks have been shown to be capable of learning the transformations (\citet{MacWhinney1991}), they lack several aspects of human-like learning, particularly memorization and online learning. 
+
+In the design of their perceptron model, \citet{Rumelhart1986} transformed input verbs into high-level feature representations by encoding each word as a set of \emph{Wickelfeatures} corresponding to the combination of the pronunciation in the word. They suggested that tense associations can be learned by using a representation that maps sound pieces of present-tense verbs to sound pieces of its past-tense. We follow these procedure, with some slight tweaks and using hyperdimensional computing to form the representations in a principled fashion.
+
+\subsection{Wickelfeature encoding}
+
+We seek to use hyperdimensional computing to understand the transformation from one layer to the next of a neural network. Drawing upon theory from Plate's \emph{Holograpahic reduce representation}, given sufficiently high dimensional encoding, any transformation of low-dimensional features can be represented through binding, unbinding, and superposition operations. Binding and unbinding associate and de-associate objects that are represented by nearly orthogonal random vectors. Superposition stores multiple bounded vectors into a single vector while preserving the desirable unbinding property due to the nearly orthogonal nature of vectors in high dimensions. We specifically focus on Binary Splatter Codes (\citet{Kanerva1994}) due to its computational efficiency and connection to hardware bit registers. 
+
+We replace Wickelfeature's phonemes with letters of the word as our fundamental unit of representation. Under BSC, every letter is represented as an $N$-dimensional vector of i.i.d. random $\{+1, -1\}$, and stored in an $N \times D$ dictionary $\Phi$ where $D$ is the number of letters in the English alphabet plus a special start and stop letter for a total of 28 random vectors. Binding and unbinding is performed by point-wise Hadamard product which can be reduced to many XOR bit operations. A verb is encoded by the superposition of all trigram vectors. Each letter of the trigram is permuted before binding to preserve ordering. For instance, the word `\emph{jump}' is represented as:
+\begin{align}
+\label{eq:wickel}
+\Psi_{jump} = sign [& \Phi_{\#} \circ \rho(\Phi_{j}) \circ \rho^2(\Phi_{u}) \\
+    	+ & \Phi_j \circ \rho(\Phi_u) \circ \rho^2 (\Phi_m) \nonumber \\
+        + & \Phi_u \circ \rho(\Phi_m) \circ \rho^2(\Phi_p) \nonumber \\
+        + & \Phi_m \circ \rho(\Phi_p) \circ \rho^2 (\Phi_{\#}) ] \nonumber
+\end{align}
+For elements that superpose to 0, we use a deterministically ergodic function to assign the sign. The sign renormalization of the summed vector ensures that every vector's Hadamard unbinding is still valid. 
+
+
+\subsection{Hypervector dictionary of present-past mapping}
+% (Andrew) I sort of want to move this to algorithms/discussion section since this is actually about the learning rules. 
+Hyperdimensional computing creates a \emph{dictionary} of associations between verb-pairs using the \emph{binding} mechanism, giving us the ability to perform one-shot learning. A content-addressable dictionary is formed by binding present-tense verbs to past-tense verbs and storing the superposition of all verb pairs in the training set in a \emph{memory vector}. By representing words in the high-level generalizable Wickelfeature space, we create a dictionary of word parts that associate common present-tense features to common past-tense features. The dictionary highlights common mappings between word parts and enables generalization of the tense transformation to unseen verbs. The standard method for creating a content-addressable dictionary creates the memory vector $\Omega$:
+
+\begin{equation}
+\Omega = \sum_{v_1, v_2}^{verbs} \Psi^{\text{present}}_{v_1} \circ \Psi^{\text{past}}_{v_2}
+\end{equation}
+The present ($v_1$) and past ($v_2$) verb pairs are encoded from their Wickelfeatures (\ref{eq:wickel}) using different dictionaries to avoid the self-inverse property in the Binary Splatter representation. 
+
+We can decode the past-tense verb from the present-tense verb stored in our memory vector by \emph{dereferencing} with the present tense verb. For instance, if $\Psi_{\text{jump}}^{\text{present}} \circ \Psi_{\text{jumped}}^{\text{past}}$, was stored, then we can dereference `\emph{jumped}' from `\emph{jump}' by:
+
+\begin{equation}
+\hat{\Psi}_{\text{jumped}}^{\text{past}} = \Omega \circ \Psi_{\text{jump}}^{\text{present}}
+\end{equation}
+
+\subsection{Difference binding for learning transformations}
+The naive encoding scheme seeks to maximize the associative ability of hypercomputing, leading to an algorithm that is well-suited for memory-recall but performs poorly on generalization. \citet{Mikolov2013} showed that word vectors can be assigned vector associations on semantic space. These semantic vectors can be manipulated by the addition and subtraction of transformations to arrive at new definitions.
+
+In order to learn high-dimensional transformations between two associated tenses, we take the difference between pairs of past-present hypervectors. Trigram encodings which are shared between the past and present hypervector cancel with each other and the resulting hypervector now encodes changes in letters between a word's past and present tense form. These transformation vectors can be bounded with reference vectors to produce an association between words and their transformation. The new encoding scheme:
+ \begin{equation}
+ \label{eq:diff_wickel_ref}
+ \Omega =  \sum_{v1, v2} \Psi^{\text{present}}_{v1} \circ (\Psi^{\text{past}}_{v2} - \Psi^{\text{past}}_{v1})
+ \end{equation}
+ And dereferencing:
+ \begin{equation}
+ \label{eq:diff_wickel_deref}
+ \hat{\Psi}^{\text{past}}_{v2} = \Omega \circ \Psi^{\text{present}}_{v1} + \Psi^{\text{past}}_{v1}
+ \end{equation}
+ 
+Due to the underlying composition in encoding hypervectors, words that share trigrams are not nearly orthogonal. This works well for generalization because words that share trigrams potentially share the same transformation. Even if a query hypervector has not been stored in $\Omega$, we have a way of recovering its transformation rule by de-referencing words which are similar in structure.
+
+\subsection{Data}
+% (Andrew): Our data section seems absurdly short. Can I make it a subsection of Characterization of learning problem?
+We designed our dataset to test generalization rules in hyperdimensional space and mimic the frequency of words that a typical English speaker is exposed to. Irregular verbs are sourced directly from \citet{Rumelhart1986a}. Regular verbs are sourced from the Brown Corpus and paired with an online API. Our final dataset supported a total of 2448 pairs of regular verbs and 189 pairs of irregular verbs. 
+    
+\subsection{Evaluation Metrics}
+In \citet{Rumelhart1986a}, performance was evaluated by comparing the output of the neural network to the ground truth output in the high-level Wickelfeature space. We evaluate performance in similar fashion, with similarity computed as the dot product of the dereferenced output to the ground-truth representation of the past-tense verb. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{dictionary_issue-170518.png}
+\caption{\textbf{Hypercomputing dictionary issue with correlated inputs}}
+\end{figure}
+
+\section{Algorithms and Results}
+
+%\subsection{Vector Algorithms}
+\subsection{Hypervector dictionary of present-past mapping}
+
+The naive hypervector framework presented above serves as the foundation for our learning algorithms. The above learning rule is considered unregularized because at any given update-step, the weight of the incoming word is added regardless of the current memory vector's state. Since the memory vector tries to capture every information presented, the same structural features are repeatedly summed together resulting in an unbounded similarity metric.
+
+The resulting similarity can be interpreted as the amount of underlying structure. Similarity associated with highly organized transformations increase quickly because many of the common features are re-emphasized repeatedly. Figure 1A  uses the regular binding and shows that hypervector mappings are unsurprisingly highly organized. Figure 1B shows that the difference binding removes many of the redundant trigrams, decreasing the similarity but allowing the model to capture more nuances.
+
+For learning this isn't particularly useful because similarity can be arbitrarily large. In order to prevent an arbitrarily large memory vector, we use a regularization procedure that evaluates the error of a new word in the training set prior to adding it to our working memory $\Omega$. More specifically, the new word vector is scaled by how dissimilar the dereferenced prediction is to the true hypervector.
+
+\begin{align}
+\label{eq:regularization_vec}
+\notag \alpha &= \frac{N-\Psi^{past\top}_{v2} \Omega \circ \Psi^{present}_{v1}}{N}  \\
+\Omega_n &= \Omega_{n-1} + \alpha \Psi^{present}_{v1} \circ \Psi^{past}_{v2}
+\end{align}
+
+By first measuring how strongly other words in the training set predict the transformation of the new verb-pair, we have an update rule that avoids saturating the memory vector with common transformation. With this regularization rule, we now can see a network that one-shot memorizes the training set accurately and can still generalize on unseen examples. Furthermore we see that the difference binding can spend more of it's bits focusing on the non-trivial transformation parts, allowing it to achieve slightly better results.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{vector_binding_algorithm-170518.png}
+\caption{\textbf{Vector binding online algorithm.} A. Unregularized binding. B. Unregularized difference binding. C. Regularized binding. D. Regularized difference binding.}
+\end{figure}
+
+The new update rule bounds the similarity measure to 1, which means that the maximum measure of similarity is satisfied when two vectors are identical. Similarity measures aren't as deceiving by filtering out the noise other inputs contribute to the model. Train and test error are now closer. The difference vector algorithm performs better by explicitly binding only the sequence of letters that compose the past tense of a verb to the present tense of the same verb. 
+
+\subsection{Matrix Algorithms}
+
+The binding mechanism described for hypercomputing is a vector operation, but \citet{Rumelhart1986a} proposed matrices as the base unit for neural networks. A straight-forward approach to solve the transformation in matrix space is to perform a linear regression between present tense and the past tense hypervectors. The \emph{memory matrix} $\mathbf{W}$ is now an $N \times N$ matrix corresponding to the least squares solution. We use this as our baseline evaluation for learning transformations.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{regression_issue-170518.png}
+\caption{\textbf{Least Squares solution for transforming hyper vectors.}}
+\end{figure}
+
+In the case of regression, all data must be available at compute time and requires computationally expensive matrix operations. Additionally, the singular values for the least squares solutions approaches really small numbers as the sample availability approaches $N$, resulting in an exploding similarity measure similar to an unregularized approach. By setting a minimum singular value, we get a similar regularized learning rule. 
+
+We propose an approach to approximate online regression by defining an error and performing gradient descent step at each iteration, with the gradient step defined as:
+
+\begin{equation}
+\Delta \mathbf{W} = \alpha (\Psi^{past}_{v2} - \mathbf{W} \Psi^{present}_{v1}) \Psi^{present^\top}_{v1}
+\end{equation}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{outer_product_algorithm-170518.png}
+\caption{\textbf{Matrix binding online algorithm.}A. Unregularized binding. B. Unregularized difference binding. C. Regularized binding. D. Regularized difference binding.}
+\end{figure}
+
+A benefit of the matrix algorithm is the ability to add more vectors, since similarity measures only taper off, not decrease from regularization.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{algorithm_comparison-170519.png}
+\caption{\textbf{Algorithm comparison} The test performance of the regression baseline (blue background) is compared to the performance of the matrix algorithms (green background) and the vector algorithms (red background). Colored circles indicate number of parameters in the network, $N=[10^3, 10^4, 10^5, 10^6]$. The vector algorithms outperform on test generalization than the regression, and have similar performance to the matrix algorihtm with fewer parameters.}
+\end{figure}
+
+\section{Discussion}
+The regression solution can be better understood through connection to hyperdimensional computing and the binding mechanism. The original proposals for binding \citet{Smolensky1990} required formation of the outer product between the two input vectors. However, this was a problem for many computational frameworks due to the need to explode the state-space by forming higher and higher order tensor products to create bound structures. \citet{Plate1991} described a new type of binding mechanism, \emph{circular convolution}, which could be used in place of the outer-product rule but also maintained the dimensionality of the two input vectors. Plate noted that circular convolution acts as a compressed outer product. The binding mechanism used in hyperdimensional computing ($\times$, element-wise multiplication) and in general can also be described as the compressed outer product. 
+
+Through the connection of binding, outer-products and matrix multiplication, we can now see that there is a simple regularization procedure that gradient descent utilizes. This can allow us to combine the dictionary one-shot learning techniques of hyperdimensional computing with the ability to generalize a high-level feature space. 
+
+Further cycles through the training data can solidify the verb pairs in the training set in the dictionary. This could also be helpful for generalization, but it is hard to tell if performance in the test set improved with the second cycle.  This regularized form of the algorithm can also iterate through the training data more than once. If we show it all of the training words a second time, we can improve its performance.
+
+\section{Conclusion}
+We have shown that hypervector algorithms provide a way for learning transformations in data in an online and one-shot manner. While the output of the transformations still operate in hypervector space, there exist ways to recover the original data when computing at sufficiently high $N$. 
+
+Our other contribution is within the realm of Parallel Distributed Processing and how the greater literature fits in with neural networks. While the optimization behavior for neural networks are not well known, our work demonstrates that a high-dimensional encoding of features and linear binding transformations can capture similar behavior as low-dimensional non-linear functions. 
+
+% In support of connectionist viewpoints from the Past Present debates,
+
+% (Andrew): Anything below here I moved to the google docs:
+% https://docs.google.com/document/d/1PUiixSRlxmuiTpZ6YzCuW75ibo0hlQbwalmxq26Wmh0/edit
+% 
+
+%\subsubsection*{Acknowledgments}
+%
+
+
+\bibliographystyle{abbrvnat}
+%\bibliographystyle{abbrv}
+\bibliography{hdprespast}
+
+% [1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
+% for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
+% T.K.\ Leen (eds.), {\it Advances in Neural Information Processing
+%   Systems 7}, pp.\ 609--616. Cambridge, MA: MIT Press.
+
+% [2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS:
+%   Exploring Realistic Neural Models with the GEneral NEural SImulation
+%   System.}  New York: TELOS/Springer--Verlag.
+
+% [3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of
+% learning and recall at excitatory recurrent synapses and cholinergic
+% modulation in rat hippocampal region CA3. {\it Journal of
+%   Neuroscience} {\bf 15}(7):5249-5262.
+
+\end{document}
