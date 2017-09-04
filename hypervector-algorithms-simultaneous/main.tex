@@ -77,32 +77,36 @@
 \begin{abstract}
 % up to 200 words
 % Motivation:
-Hyperdimensional computing (\citet{Kanerva2009}) introduced an opportunity to challenge rule based models of language. 
+Hyperdimensional computing introduced an opportunity for connectionist models (PDP; \citet{McClelland1986}) to challenge rule based models of language. 
 % Problem statement:
-Rumelhart and McClelland's connectionist pattern-associator model (RMM) (\citet{Pinker2002a}) had a the overgeneralization problem for past-present tense verb transformations.
+We revisited Rumelhart and McClelland's connectionist pattern-associator model (RMM) on how children learn past-present tense verb transformations. Their model posed these problems: (1) overgeneralizing patterns, or rules, to verb transformations, and (2) recoverability of a predicted verb from model output.
 %Approach:
-With Rumelhart and McClelland's wicklefeature machinery, we developed an online, iterative algorithm with comparable performance to a single layer neural net with a perceptron learning rule (\citet{Rumelhart1986a}). The \"resonance attractor", an iterative, online algorithm, addressed the unsolved problem of recovering words from the machinery.
+We focus on predicting past tense verbs from their respective present tense verbs. Our online, iterative algorithm was competitive in accuracy and performance to a single layer neural net with a perceptron learning rule.
 %Results:
-Results indicated that the regularized, online learning algorithm performed similarly to the prescribed neural net with the additional benefit of understanding every vector operation. The resonance attractor could recover verb transformations but has yet to generalize or accurately predict an unforseen verb. 
+Results indicated that the online learning algorithm learned specific rules through demonstrating overfitting and complementary regularization. The extension to recover verb transformations has yet to generalize or accurately predict an unseen verb. 
 % Conclusions:
-Rumelhart and McClelland's connectionist model could in fact define rules and not overgeneralize with correct regularization rules. The implications of the results were that language models could enumerate language rules without predefined rules. Furthermore, such connectionist language models could define infinite language rules in an efficient amount of space and could potentially be built recursively to understand higher level concepts.
+The implications of the results were that language models could enumerate language rules without predefined rules. Such connectionist language models could define infinite language rules in an efficient amount of space and could potentially be built recursively to understand higher level concepts.
 
 \end{abstract}
 
 \section{Introduction}
+% Introduce rumelhart and mcclelland paper
+In the neural-net classic ``On Learning the Past Tenses of English Verbs'', Rumelhart and McClelland (1986) model children's learning of the past tense by ear rather than by explicit rules and exceptions. They show that a neural net can learn the past-tense rule and its
+exceptions from examples in stages corresponding to how children learn, thus implying that these nets crudely model brains. This and similar models spawned a vigorous debate on the adequacy of artificial neural nets/connectionism/Parallel Distributed Processing (PDP) for modeling human cognition at large and language in particular. Some argued for traditional symbolic computing based on rules for regular verbs and an explicit memory for storing exceptions (\citet{Pinker1988}; \citet{Fodor1988}; \citet{Fodor1990}; \citet{Pinker2002a}) while others argued for sub-symbolic information processing where rules arise as emergent phenomena and memory is implicit in the trained connection weights (\citet{MacWhinney1991}; \citet{Bullinaria1994}; \citet{McClelland2002}).
 
-The classical work \emph{Parallel Distributed Processing} (PDP; \citet{McClelland1986}) laid the foundations for modern neural networks and machine-learning algorithms. 
-\citet{Rumelhart1986a} described a biologically-inspired type of system that could learn complex transformation between present-tense and past-tense verbs, igniting an intense debate (\citet{Pinker1988}; \citet{Fodor1988}) regarding the nature of neural computation between symbolic (\citet{Pinker2002a}; \citet{Fodor1990}) and sub-symbolic information processing (\citet{MacWhinney1991}; \citet{Bullinaria1994}; \citet{McClelland2002}). Connectionist algorithms presented in PDP, such as the perceptron learning rule, have evolved into state-of-the-art machine-learning models. While sub-symbolic learning algorithms perform well, their inner workings are not well-understood, and great efforts are underway to uncover insights into their functionality.
+% Then pdp and applications of pdp in problem
+Neural networks are a solution to learn these generalizable rules paired with the challenge of memorizing exceptions to these rules. The classical work \emph{Parallel Distributed Processing} (PDP; \citet{McClelland1986}) laid the foundations for modern neural networks and machine-learning algorithms. Connectionist algorithms presented in PDP, such as the perceptron learning rule, have evolved into state-of-the-art machine-learning models. While sub-symbolic learning algorithms perform well, their inner workings are not well-understood. We explore specific mathematical operations to explain hidden layer behavior in a neural net. A shortcoming of typical neural network models is requiring many iterations over training data. Learning must be performed in an online fashion to reflect how children are exposed to words one at a time.
 
-The ideas presented in PDP go beyond the role in inspiring deep neural networks. The original present-past learning problem was motivated by works on how children learn verb tense associations and the issue of learning generalizable rules paired with the challenge of memorizing exceptions to these rules. Furthermore, children are exposed to words one at a time, and learning must be performed in an online fashion, unlike typical neural network models that require many iterations over the training data.
-
-Hyperdimensional computing (\citet{Kanerva2009}) is a framework that can bridge the divide between symbolic and connectionist information processing. With advances in hyperdimensional computing theory, we revisit the classic present-past learning problem to develop new learning algorithms that can: 1. perform one-shot memorization for any given association in the training set; 2. learn generalizable rules or transformations that apply to data outside the training set. 3. learn in an online fashion; 4. infer one representation from another. We describe several neural networks that use the principles of hyperdimensional computing to achieve these goals and present new insights into the relationships between gradient-descent learning algorithms and the \emph{binding mechanism} present in hyperdimensional computing and other vector-symbolic architectures (\citet{Gayler2003}) .
+% detailed goals of the paper
+Here we look at the learning of the past tense in the light of more
+recent machine-learning algorithms. They are based on computing with
+high-dimensional (HD) random vectors, first proposed by \citet{Plate1991} as Holographic Reduced Representation (HRR) \emph{Holograpahic reduce representation} and referred to here
+also as ``hyperdimensional'' computing (\citet{Kanerva2009}).  The appeal of HD computing is based on its simple operations for symbolic computing and its suitability for statistical learning from data.  In fact, it is a likely path to systems that satisfy both sides of the debate. Specific goals of HD computing include: (1) one-shot memorization of any given association in the training set, (2) learning that is generalizable rules or transformations that apply to data outside the training set, (3) learning in an online fashion, and (4) inferring one representation from another. To achieve these goals, we describe several HD learning algorithms that explore relationships between gradient-descent learning algorithms and the \emph{binding mechanism} present in hyperdimensional computing (\citet{Gayler2003}).
 
 \section{Characterization of Learning Problem}
-
 Transforming a present tense verb to its past tense presents two fundamentally conflicting challenges: learning a generalizable rule applicable to most tense transformations while memorizing specific exceptions. While neural networks have been shown to be capable of learning the transformations (\citet{MacWhinney1991}), they lack several aspects of human-like learning, particularly memorization and online learning. 
 
-In the design of their perceptron model, \citet{Rumelhart1986} transformed input verbs into high-level feature representations by encoding each word as a set of \emph{Wickelfeatures} corresponding to the combination of the pronunciation in the word. They suggested that tense associations can be learned by using a representation that maps sound pieces of present-tense verbs to sound pieces of its past-tense. We follow these procedure, with some slight tweaks and using hyperdimensional computing to form the representations in a principled fashion.
+In the design of their perceptron model, \citet{Rumelhart1986} transformed input verbs into high-level feature representations by encoding each word as a set of \emph{Wickelfeatures} corresponding to the combination of the pronunciation in the word. They suggested that tense associations can be learned by using a representation that maps sound pieces of present-tense verbs to sound pieces of its past-tense. We follow this procedure, with some slight tweaks and using hyperdimensional computing to form the representations in a principled fashion.
 
 \subsection{Wickelfeature encoding}
 
@@ -112,7 +116,7 @@ We replace Wickelfeature's phonemes with letters of the word as our fundamental 
 \begin{align}
 \label{eq:wickel}
 \Psi_{jump} = sign [& \Phi_{\#} \circ \rho(\Phi_{j}) \circ \rho^2(\Phi_{u}) \\
-    	+ & \Phi_j \circ \rho(\Phi_u) \circ \rho^2 (\Phi_m) \nonumber \\
+      + & \Phi_j \circ \rho(\Phi_u) \circ \rho^2 (\Phi_m) \nonumber \\
         + & \Phi_u \circ \rho(\Phi_m) \circ \rho^2(\Phi_p) \nonumber \\
         + & \Phi_m \circ \rho(\Phi_p) \circ \rho^2 (\Phi_{\#}) ] \nonumber
 \end{align}
