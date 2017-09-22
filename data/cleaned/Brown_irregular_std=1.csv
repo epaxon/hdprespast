@@ -1,9 +1,8 @@
-low
+low,,
 arise,arose,1
 bear,bore,1
 beat,beat,1
 beget,begot,1
-bereave,bereaved,1
 beseech,besought,1
 bide,bade,1
 cleave,cleft,1
@@ -15,11 +14,11 @@ forsake,forsook,1
 gild,gilded,2
 heave,heaved,2
 mow,mowed,2
+overeat,overate,1
 pen,pent,2
 plead,pled,2
 rid,rid,2
 seek,sought,2
-shear,sheared,1
 shed,shed,2
 shine,shone,2
 shoe,shod,2
@@ -34,7 +33,8 @@ spin,spun,1
 spit,spat,2
 split,split,2
 telecast,telecast,2
-medium
+undo,undid,1
+medium,,
 awake,awoke,5
 become,became,5
 begin,began,5
@@ -78,7 +78,6 @@ forget,forgot,4
 freeze,froze,3
 gnaw,gnawed,3
 grind,ground,3
-grip,gripped,3
 grow,grew,3
 hang,hung,3
 hear,heard,5
@@ -88,7 +87,6 @@ hold,held,5
 hurt,hurt,5
 keep,kept,5
 kneel,knelt,3
-knit,knitted,3
 know,knew,5
 lay,laid,5
 lead,led,3
@@ -104,15 +102,14 @@ make,made,3
 may,might,5
 mean,meant,3
 meet,met,6
-melt,melted,3
+fake,fake row,-1
+partake,partook,3
 pay,paid,4
-prove,proved,3
 quit,quit,3
 read,read,3
 ride,rode,3
 ring,rang,5
 run,ran,3
-saw,sawed,3
 say,said,5
 sell,sold,3
 send,sent,5
@@ -131,7 +128,6 @@ sink,sank,3
 sit,sat,5
 sleep,slept,4
 smite,smote,3
-sow,sowed,4
 speak,spoke,6
 spell,spelt,4
 spend,spent,6
@@ -147,7 +143,6 @@ strive,strove,5
 swear,swore,6
 sweat,sweat,3
 sweep,swept,3
-swell,swelled,4
 swim,swam,4
 teach,taught,6
 tear,tore,5
@@ -158,7 +153,6 @@ weep,wept,5
 wind,wound,5
 wring,wrung,5
 write,wrote,6
-high
 be,was,10
 bring,brought,7
 can,could,8
