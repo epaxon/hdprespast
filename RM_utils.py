@@ -171,7 +171,7 @@ def graph_onetype(x, y, ystd, accuracy, title=None, xlabel='number of words', yl
     plt.ylabel('Accuracy',fontsize=16)
 
 
-def graph(x, y1, y2, y1std, y2std, accuracy, irreg_accuracy, title=None, xlabel='number of words', ylabel='average dot product', legend='upper left'):   
+def graph_separate(x, y1, y2, y1std, y2std, accuracy, irreg_accuracy, title=None, xlabel='number of words', ylabel='average dot product', legend='upper left'):   
     plt.figure(1)
     plt.subplot(211)
     plt.tick_params(axis='both', which='major', labelsize=12)
@@ -208,48 +208,6 @@ def graph(x, y1, y2, y1std, y2std, accuracy, irreg_accuracy, title=None, xlabel=
     plt.ylabel('Accuracy',fontsize=16)
     plt.legend(loc=legend,fontsize=12)
     
-# https://matplotlib.org/api/lines_api.html
-def graph_separate(x, y1, y2, y1std, y2std, \
-                   y1irregular, y2irregular, \
-                   accuracy, irreg_accuracy, \
-                   title=None, xlabel='number of words', ylabel='average dot product', legend='upper left'):   
-    plt.figure(1)
-    plt.subplot(211)
-    fig = plt.figure(figsize=(4,3))
-    plt.tick_params(axis='both', which='major', labelsize=12)
-    plt.tick_params(axis='both', which='minor', labelsize=12)
-    
-    start = round_to_tick(min(min(y1), min(y2)) - max(max(y1std),max(y2std)))
-    end = round_to_tick(max(max(y1), max(y2)) + max(max(y1std),max(y2std)))
-    
-    y1std = np.clip(y1std, max(-8, start-.5), min(8, end+.5))
-    y2std = np.clip(y2std, max(-8, start-.5), min(8, end+.5))
-    
-
-    plt.plot(x, y1, c='b', lw=2, label='Train')
-    plt.plot(x, y2, c='g', lw=2, label='Test')
-    plt.plot(x, y1irregular, ':', c='b', lw=2, label='Train irregular')
-    plt.plot(x, y2irregular, ':', c='g', lw=2, label='Test irregular')
-
-    plt.fill_between(x, y1-y1std, y1+y1std, facecolor='b', alpha=0.1)
-    plt.fill_between(x, y2-y2std, y2+y2std, facecolor='g', alpha=0.1)
-
-    plt.legend(loc=legend,fontsize=12)
-
-    plt.xlabel('Number Training Examples',fontsize=16)
-    plt.ylabel('Feature Similarity',fontsize=16)
-    plt.title(title,fontsize=16)
-
-    plt.xlim([0, 1700])
-
-    plt.tight_layout()
-    
-    plt.subplot(212)
-    plt.plot(x, accuracy, c='b', label='Regular')
-    plt.plot(x, irreg_accuracy, c='g', label='Irregular')
-    plt.xlabel('Number Training Examples',fontsize=16)
-    plt.ylabel('Accuracy',fontsize=16)
-    plt.legend(loc=legend,fontsize=12)
     
 def trigram_dict_onetype(past2, pres1, train_func, N):
     psi = np.zeros(N)
