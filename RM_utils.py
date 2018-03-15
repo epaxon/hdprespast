@@ -99,11 +99,20 @@ def train_diff(tv, past2, present1, present2, N):
     tv += np.multiply(present1, past2-present2)
     return tv
 
+def train_diff_bulk(tv, past2, present1, present2, N):
+    tv += np.sum(np.multiply(present1, past2-present2), axis=0)
+    return tv
+
 def reg_train_diff(tv, past2, present1, present2, N):
     pred = np.multiply(tv, present1) + present2
     #pred = np.where(pred>0, 1, -1)
     #print (sim(pred, past)),
     tv += ((N-sim(pred, past2))/float(N)) * np.multiply(past2-present2, present1)
+    return tv
+
+def reg_train_diff_bulk(tv, past2, present1, present2, N):
+    for i in range(past2.shape[0]):
+        tv = reg_train_diff(tv, past2[i], present1[i], present2[i], N)
     return tv
 
 def outer_train(W, past, present, N):
