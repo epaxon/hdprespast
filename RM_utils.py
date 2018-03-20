@@ -13,6 +13,71 @@ from matplotlib.collections import LineCollection
 
 cwd = os.getcwd()
 
+# R&M pg 33
+pres_categories = {0: 
+                   ['beat', 'fit', 'set', 'spread', 'hit', 'cut', 'put', 
+                    'thrust', 'bid'],
+                   1:
+                   ['build', 'send', 'spend', 'bend', 'lend'],
+                   2:
+                   ['feel', 'deal', 'do', 'flee', 'tell', 'sell', 'hear',
+                    'keep', 'leave', 'sleep', 'lose', 'mean', 'say', 
+                    'sweep', 'creep', 'weep'],
+                   3:
+                   ['have', 'make', 'think', 'buy', 'bring', 'seek',
+                    'teach', 'catch'],
+                   4:
+                   ['get', 'meet', 'shoot', 'write', 'lead', 'understand',
+                    'sit', 'mislead', 'bleed', 'feed', 'stand', 'light', 
+                    'find', 'fight', 'read', 'meet', 'hide', 'hold', 
+                    'ride', 'breed', 'wind', 'grind'
+                   ],
+                   5:
+                   ['drink', 'ring', 'sing', 'swim'],
+                   6:
+                   ['drag', 'hang', 'swing', 'dig', 'cling', 'stick'],
+                   7:
+                   ['give', 'take', 'come', 'shake','arise','rise','run',
+                    'become', 'bear', 'wear', 'speak', 'brake', 'drive', 
+                    'strike', 'fall', 'freeze', 'choose', 'tear'],
+                   8:
+                   ['go', 'throw', 'blow', 'grow', 'draw', 'fly', 'know',
+                    'see']
+}
+past_categories = {0: 
+                   ['beaten', 'fitted', 'set', 'spread', 'hit', 'cut', 'put', 
+                    'thrust', 'bid'],
+                   1:
+                   ['built', 'sent', 'spent', 'bent', 'lent'],
+                   2:
+                   ['felt', 'dealt', 'did', 'fled', 'told', 'sold', 'heard',
+                    'kept', 'left', 'slept', 'lost', 'meant', 'said', 
+                    'swept', 'crept', 'wept'],
+                   3:
+                   ['had', 'made', 'thought', 'bought', 'brought', 'sought',
+                    'taught', 'caught'],
+                   4:
+                   ['got', 'met', 'shot', 'wrote', 'lead', 'understood',
+                    'sat', 'misled', 'bled', 'fed', 'stood', 'lit', 
+                    'found', 'fought', 'read', 'met', 'hid', 'held', 
+                    'rode', 'bred', 'wound', 'ground'
+                   ],
+                   5:
+                   ['drank', 'rang', 'sang', 'swam'],
+                   6:
+                   ['drug', 'hung', 'swung', 'dug', 'clung', 'stuck'],
+                   7:
+                   ['gave', 'took', 'came', 'shook','arose','rose','ran',
+                    'became', 'bore', 'wore', 'spoke', 'broke', 'drove', 
+                    'struck', 'fell', 'froze', 'chose', 'tore'],
+                   8:
+                   ['went', 'threw', 'blew', 'grew', 'drew', 'flew', 'knew',
+                    'saw']
+}
+
+def exemplars():
+    return pres_categories, past_categories
+
 def read_verbs(url):
     keys = ['low', 'medium', 'high']
     verbs = {key: [] for key in keys}
