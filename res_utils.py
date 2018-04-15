@@ -286,6 +286,30 @@ def res_decode_exaway(bound_vec, vecs, max_steps=100):
      
     return x_hists, i
 
+
+def get_output_conv(coef_hists, nsteps=None):
+    
+    alphis = []
+    fstep = coef_hists[0].shape[0]
+    
+    for i in range(len(coef_hists)):
+        if nsteps is None:
+            alphis.append(np.argmax(np.abs(coef_hists[i][-1,:])))
+        else:
+            alphis.append(np.argmax(np.abs(coef_hists[i][nsteps,:])))
+            fstep = nsteps
+    
+    
+    for st in range(fstep-1, 0, -1):
+        aa = []
+        for i in range(len(coef_hists)):
+            aa.append(np.argmax(np.abs(coef_hists[i][st,:])))
+            
+        if not alphis == aa:
+            break
+    
+    return alphis, st
+
 def resplot_im(coef_hists, nsteps=None, vals=None, labels=None, ticks=None):
     
     alphis = []
@@ -343,7 +367,7 @@ def resplot_im(coef_hists, nsteps=None, vals=None, labels=None, ticks=None):
         else:    
             ax[j].set_title(alphis[j])
 
-    colorbar(imh, ticks=[])
+    #colorbar(imh, ticks=[])
     
     plt.tight_layout()
     
