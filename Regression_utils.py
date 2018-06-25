@@ -133,5 +133,244 @@ def closed_trigram_dict(trainpres1, testpres1, trainpast2, testpast2, \
         accirreg[i], indices = compare(irregtest_pred, irregtestpast2)
         
     return x, y1, y2, yreg, yirreg, y1std, y2std, yregstd, yirregstd, acc1, acc2, accreg, accirreg
+ 
+
+def ngram_encode(ngram_str, letter_vecs, alph):
+    vec = np.zeros(letter_vecs.shape[1])
+    
+    full_str = '#' + ngram_str + '.'
+    
+    
+    for il, l in enumerate(full_str[:-2]):
+        trivec = letter_vecs[alph.find(full_str[il]), :]
+        for c3 in range(1, 3):
+            trivec = trivec * np.roll(letter_vecs[alph.find(full_str[il+c3]), :], c3)
+            
+        vec += trivec
+    return vec
+
+def ngram_encode_cl(ngram_str, letter_vecs, alph):
+    vec = ngram_encode(ngram_str, letter_vecs, alph)
+    return 2* (vec + 0.1*(np.random.rand(letter_vecs.shape[1])-0.5) > 0) - 1
+
+
+def spell(coef_hists):
+    pred = ''
+    alphis = []
+
+    for i in range(len(coef_hists)):
+        x, alphi = np.unravel_index(coef_hists[i].argmax(), coef_hists[i].shape)
+        pred += alph[alphi]
+        alphis.append(alphi)
+
+    return pred, alphis
+
+def explain_away(bound_vec, letter_vecs, state_length=5,  max_steps=500, conseq=100):
+    th_vec = bound_vec.copy()
+    conseq_preds = []
+    convstep = -1
+    
+    states, coef_hists = initialize(letter_vecs, state_length, max_steps)
+    
+    #state_length = len(states)
+    N = letter_vecs.shape[1]
+    D = letter_vecs.shape[0]
+
+    for i in range(max_steps):
+
+        for j in range(1, state_length-1):
+            coef_hists[j-1][i, :] = np.dot(letter_vecs, states[j])
+        
+        for j in range(1, state_length-1):
+            mxidx = np.argmax(np.abs(coef_hists[j-1][i,:]))
+            states[j] *= np.sign(coef_hists[j-1][i, mxidx])
+        ljds = []
+        for j in range(1, state_length-1):
+            if j == 1:
+                ljds.append(
+                    (np.roll(th_vec * states[0] * np.roll(states[2], 2), -1) +
+                    th_vec * np.roll(states[2], 1) * np.roll(states[3], 2)) / 2
+                )
+            elif 1 < j < state_length-2:
+                ljds.append(
+                    (np.roll(th_vec * states[j-2] * np.roll(states[j-1], 1), -2) +
+                    np.roll(th_vec * states[j-1] * np.roll(states[j+1], 2), -1) +
+                      th_vec * np.roll(states[j+1], 1) * np.roll(states[j+2], 2)) / 3
+                )
+            else:
+                ljds.append(
+                    (np.roll(th_vec * states[j-1] * np.roll(states[j+1], 2), -1) +
+                   np.roll(th_vec * states[j-2] * np.roll(states[j-1], 1), -2)) / 2
+                )
+
+        for j in range(1, state_length-1):    
+            states[j] = 1.2*np.dot(letter_vecs.T, np.dot(ljds[j-1], letter_vecs.T)/N) + states[j]
+
+            gg=10000
+            states[j] = gg*np.tanh(states[j]/gg)
+            #states[j] = 2.0 * (states[j] > 0) - 1
+
+        bv = states[0] * np.roll(states[1],1) * np.roll(states[2],2)  
+        for j in range(1, state_length-2):
+            bv += states[j] * np.roll(states[j+1],1) * np.roll(states[j+2],2) 
+            
+        th_vec = bound_vec - bv
+        pred, alphis = spell(coef_hists)
+        
+        if convstep == -1:
+            if len(conseq_preds) == conseq and len( set( conseq_preds ) ) == 1:
+                convstep = i
+                #break
+            conseq_preds.append(pred)
+            conseq_preds = conseq_preds[-conseq:]
+
+#         print ('pred', pred)
+#     print ('conseq', conseq_preds, len(conseq_preds))
+#     print ('breaked', i, convstep)
+    if convstep == -1:
+        convstep=i
+    return states, coef_hists, convstep
     
 
+def resplot(word_length, states, coef_hists, N, nsteps, start):
+    
+    pred, alphis = spell(coef_hists)
+    print pred
+    rows = 1
+    columns = word_length
+
+    fig, axes = plt.subplots(rows, columns, sharex='all', squeeze=True, figsize=(6, 2.5))
+    cols = get_cmap('copper', min(500,n_steps))
+    x = np.linspace(0,len(alph)-2,len(alph)-2)
+    labels = list(alph)
+    plt.xticks(x, labels)
+    
+    
+    
+    for j in range(word_length):
+        for i in range(start, min(500,n_steps)):
+            # graphing the max positive at every iteration is not intuitive, since we should
+            # be focusing on how our predicted letter's probability increases over time
+            coef_hists[j][i,alphis[j]] = np.abs(coef_hists[j][i,alphis[j]])
+            axes[j].plot(coef_hists[j][i,:], lw=1.7, c=cols(i))
+            
+        step, alphi = np.unravel_index(coef_hists[j].argmax(), coef_hists[j].shape)
+        axes[j].plot(alphi, coef_hists[j][step, alphi], '+')
+
+    #plt.savefig('figures/'+title+pred+'-N='+str(N)+'-steps='+str(nsteps)+'-reg='+reg+'.svg')
+    
+def accuracy(pred, actual):
+    acc = 0
+    for i in range(len(pred)):
+        if pred[i] == actual[i]:
+            acc += 1
+    return acc / float(len(pred))
+
+def fill_run(words, word_length=8, trials=1, N=1000, n_steps=500):
+    all_coefs = []
+    all_convcoefs = []
+    all_words = []
+    all_convwords = []
+    for trial in range(trials):
+        for word in words:
+            dic1 = 2 * (np.random.randn(D, N) < 0) - 1
+
+            word_vec = ngram_encode_cl(word, dic1, alph)
+
+            states, coef_hists = initialize(dic1, word_length+2, n_steps)
+            states, coef_hists, steps = explain_away(
+                word_vec, states, coef_hists, word_length+2, dic1, N, D, n_steps)
+            pred, alphis = spell(coef_hists)
+
+            conv_coef_hists = [coef_hists[j][:steps] for j in range(len(coef_hists))]
+            predconv, alphisconv = spell(conv_coef_hists)
+            #print (pred, predconv, word)
+            if pred == word:
+                all_coefs.append(coef_hists)
+                all_words.append(word)
+            if predconv == word:
+                all_convcoefs.append(conv_coef_hists)
+                all_convwords.append(word)
+    return all_coefs, all_words, all_convcoefs, all_convwords
+            
+
+def initialize(letter_vecs, state_length=5, n_steps=500):
+    
+    N = letter_vecs.shape[1]
+    D = letter_vecs.shape[0]
+    
+    states = []
+    coef_hists = []
+    
+    for i in range(state_length):
+        states.append(np.random.randn(N))
+    
+    for i in range(1, state_length-1):
+        states[i] = np.dot(letter_vecs.T, np.dot(states[i], letter_vecs.T))
+
+    for i in range(1, state_length-1):
+        states[i] = states[i]/norm(states[i])
+
+    states[0] = letter_vecs[alph.find('#'), :]
+    states[state_length-1] = letter_vecs[alph.find('.'), :]
+    
+    for i in range(1, state_length-1):
+        coef_hists.append(np.zeros((n_steps, D)))
+    
+    return states, coef_hists
+
+
+def resonate_trigram(bound_vec, letter_vecs, state_length=5,  max_steps=500):
+    th_vec = bound_vec.copy()
+    conseq_preds = []
+    convstep = max_steps-1
+    
+    states, coef_hists = initialize(letter_vecs, state_length, max_steps)
+    
+    #state_length = len(states)
+    N = letter_vecs.shape[1]
+    D = letter_vecs.shape[0]
+
+    for i in range(max_steps):
+        all_converged = np.zeros(state_length-2)
+        for j in range(1, state_length-1):
+            coef_hists[j-1][i, :] = np.dot(letter_vecs, states[j])
+        
+            if i > 1:
+                all_converged[j-1] = np.allclose(coef_hists[j-1][i,:], coef_hists[j-1][i-1, :],
+                                                atol=5e-3, rtol=2e-2)
+                
+            mxidx = np.argmax(np.abs(coef_hists[j-1][i,:]))
+            #states[j] *= np.sign(coef_hists[j-1][i, mxidx])
+            
+        if np.all(all_converged):
+            convstep=i
+            print 'converged:', i,
+            break
+        
+        ljds = []
+        for j in range(1, state_length-1):
+            if j == 1:
+                ljds.append(
+                    (np.roll(th_vec * states[0] * np.roll(states[2], 2), -1) +
+                    th_vec * np.roll(states[2], 1) * np.roll(states[3], 2)) / 2
+                )
+            elif 1 < j < state_length-2:
+                ljds.append(
+                    (np.roll(th_vec * states[j-2] * np.roll(states[j-1], 1), -2) +
+                    np.roll(th_vec * states[j-1] * np.roll(states[j+1], 2), -1) +
+                      th_vec * np.roll(states[j+1], 1) * np.roll(states[j+2], 2)) / 3
+                )
+            else:
+                ljds.append(
+                    (np.roll(th_vec * states[j-1] * np.roll(states[j+1], 2), -1) +
+                   np.roll(th_vec * states[j-2] * np.roll(states[j-1], 1), -2)) / 2
+                )
+
+        for j in range(1, state_length-1):    
+            states[j] = np.dot(letter_vecs.T, np.dot(ljds[j-1], letter_vecs.T)/N) #+ 1.0*states[j]
+            states[j] = 2.0 * (states[j] > 0) - 1
+            #states[j] /= norm(states[j])
+        
+    return states, coef_hists, convstep
+        
