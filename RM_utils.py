@@ -123,10 +123,10 @@ def genX(verbs, N, dic1, dic2, alph):
     for m in range(len(verbs)):
         pair = verbs[m]
 
-        PRES1[m] = ngram_encode_cl(pair[1], dic1, alph)
-        PRES2[m] = ngram_encode_cl(pair[1], dic2, alph)
-        PAST1[m] = ngram_encode_cl(pair[0], dic1, alph)
-        PAST2[m] = ngram_encode_cl(pair[0], dic2, alph)
+        PRES1[m] = ngram_encode_cl(pair[0], dic1, alph)
+        PRES2[m] = ngram_encode_cl(pair[0], dic2, alph)
+        PAST1[m] = ngram_encode_cl(pair[1], dic1, alph)
+        PAST2[m] = ngram_encode_cl(pair[1], dic2, alph)
 #         print(pair[0], np.sum(PRES1[m]), pair[1], np.sum(PRES2[m]))
         
     #X = np.where(PAST1-PRES1 > 0, 1, -1)
